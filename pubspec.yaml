@@ -1,0 +1,32 @@
+name: nubanktest
+description: Purple Shortner
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.15.1 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+
+  get_it: ^7.2.0 # Dependency Injector
+  flutter_bloc: ^8.0.1 # State manager
+  dio: ^4.0.4 # Http handler
+  dartz: ^0.10.1 # Tools to simplify dart data
+  rxdart: ^0.27.3 # Reactive functions
+
+dev_dependencies:
+  mockito: ^5.0.17 # Tests helpers
+  build_runner: ^2.1.7 # Files generator
+
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true
