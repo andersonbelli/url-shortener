@@ -19,6 +19,7 @@ class ShortenerDataSourceImpl extends ShortenerDataSource {
   Future<ShortUrlModel> shortUrl(String urlToBeShortened) async {
     final response =
         await httpManager.post("api/alias", {"url": urlToBeShortened});
+
     return ShortUrlModel.fromJson(response);
   }
 

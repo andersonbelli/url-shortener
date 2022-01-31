@@ -7,6 +7,7 @@ import 'package:nubanktest/data/models/links/links.model.dart';
 import 'package:nubanktest/data/models/original_url/original_url.model.dart';
 import 'package:nubanktest/data/models/original_url/original_url_error.model.dart';
 import 'package:nubanktest/data/models/short_url/short_url.model.dart';
+import 'package:nubanktest/data/models/url_generic_error.model.dart';
 import 'package:nubanktest/data/repositories/shortener.repository_impl.dart';
 import 'package:nubanktest/domain/repositories/shortener.repository.dart';
 
@@ -17,37 +18,37 @@ void main() {
   late ShortenerRepository shortenerRepository;
   late MockShortenerDataSourceImpl shortenerRemoteDataSourceImplMock;
 
+  const testShortUrl = ShortUrlModel(
+    alias: '28431',
+    links: LinksModel(
+      self: "https://www.google.com",
+      short: "https://url-shortener-nu.herokuapp.com/short/28431",
+    ),
+  );
+
+  const testOriginalUrl = OriginalUrlModel(
+    url: "https://www.google.com",
+  );
+
+  const testOriginalUrlNotFound = OriginalUrlNotFoundErrorModel(
+    error: "Alias for 28431 not found",
+  );
+
+  const testUrl = "https://www.google.com";
+
+  const testId = "28431";
+
   setUpAll(() {
     shortenerRemoteDataSourceImplMock = MockShortenerDataSourceImpl();
     shortenerRepository =
         ShortenerRepositoryImpl(remote: shortenerRemoteDataSourceImplMock);
   });
 
-  group('Shortener Repository test', () {
-    const testShortUrl = ShortUrlModel(
-      alias: '28431',
-      links: LinksModel(
-        self: "https://www.google.com",
-        short: "https://url-shortener-nu.herokuapp.com/short/28431",
-      ),
-    );
-
-    const testOriginalUrl = OriginalUrlModel(
-      url: "https://www.google.com",
-    );
-
-    const testOriginalUrlNotFound = OriginalUrlNotFoundErrorModel(
-      error: "Alias for 28431 not found",
-    );
-
-    const testUrl = "https://www.google.com";
-
-    const testId = "28431";
-
+  group('ShortenerRepository shortUrl test', () {
     test('Should successfully short a url', () async {
       // arrange
       when(shortenerRemoteDataSourceImplMock.shortUrl(testUrl)).thenAnswer(
-        (_) async => testShortUrl,
+            (_) async => testShortUrl,
       );
 
       // act
@@ -60,6 +61,23 @@ void main() {
       expect(result, equals(const Right(testShortUrl)));
     });
 
+    test('Should not short a url and throw an error', () async {
+      // arrange
+      when(shortenerRemoteDataSourceImplMock.shortUrl(testId)).thenThrow(
+        Left(UrlGenericErrorModel()),
+      );
+
+      // act
+      // assert
+      expectLater(() async => await shortenerRepository.shortUrl(testId),
+          throwsA(isInstanceOf<Left<UrlGenericErrorModel, dynamic>>()));
+
+      verify(shortenerRemoteDataSourceImplMock.shortUrl(testId));
+      verifyNoMoreInteractions(shortenerRemoteDataSourceImplMock);
+    });
+  });
+
+  group('ShortenerRepository getOriginalUrl test', () {
     test('Should successfully retrieve the original url', () async {
       // arrange
       when(shortenerRemoteDataSourceImplMock.getOriginalUrl(testId)).thenAnswer(
@@ -76,10 +94,13 @@ void main() {
       expect(result, equals(const Right(testOriginalUrl)));
     });
 
-    test('Should not found the searched alias Id and return an error', () async {
+    test(
+        '''Should not found the searched alias Id 
+        and return an OriginalUrlNotFoundErrorModel''',
+        () async {
       // arrange
       when(shortenerRemoteDataSourceImplMock.getOriginalUrl(testId)).thenAnswer(
-            (_) async => testOriginalUrlNotFound,
+        (_) async => testOriginalUrlNotFound,
       );
 
       // act
@@ -90,6 +111,21 @@ void main() {
       verifyNoMoreInteractions(shortenerRemoteDataSourceImplMock);
 
       expect(result, equals(const Right(testOriginalUrlNotFound)));
+    });
+
+    test('Should not retrieve a url and throw an error', () async {
+      // arrange
+      when(shortenerRemoteDataSourceImplMock.getOriginalUrl(testId)).thenThrow(
+        Left(UrlGenericErrorModel()),
+      );
+
+      // act
+      // assert
+      expectLater(() async => await shortenerRepository.getOriginalUrl(testId),
+          throwsA(isInstanceOf<Left<UrlGenericErrorModel, dynamic>>()));
+
+      verify(shortenerRemoteDataSourceImplMock.getOriginalUrl(testId));
+      verifyNoMoreInteractions(shortenerRemoteDataSourceImplMock);
     });
   });
 }

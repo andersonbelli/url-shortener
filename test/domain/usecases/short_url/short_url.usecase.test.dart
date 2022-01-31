@@ -7,7 +7,7 @@ import 'package:nubanktest/data/models/short_url/short_url.model.dart';
 import 'package:nubanktest/domain/repositories/shortener.repository.dart';
 import 'package:nubanktest/domain/usecases/short_url.usecase.dart';
 
-import 'short_url.usecase.mocks.dart';
+import 'short_url.usecase.test.mocks.dart';
 
 @GenerateMocks([ShortenerRepository])
 void main() {

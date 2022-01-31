@@ -9,7 +9,6 @@ import 'package:nubanktest/domain/usecases/short_url.usecase.dart';
 import 'package:rxdart/subjects.dart';
 
 part 'home.event.dart';
-
 part 'home.state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
@@ -19,7 +18,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   List<ShortUrl> urlsList = [];
 
   final _shortenedUrlController = BehaviorSubject<ShortUrl>();
+
   Stream<ShortUrl> get shortenedUrl => _shortenedUrlController.stream;
+
   Function(ShortUrl) get _onShortenedChanged =>
       _shortenedUrlController.sink.add;
 
@@ -48,10 +49,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       final originalUrlEither = await getOriginalUrlUseCase(event.id);
 
       originalUrlEither.fold(
-        (failure) async* {
+        (failure) {
           emit(HomeErrorState(message: failure.message));
         },
-        (originalUrl) async* {
+        (originalUrl) {
           emit(HomeShortenedUrlRetrievedState(originalUrl: originalUrl));
         },
       );

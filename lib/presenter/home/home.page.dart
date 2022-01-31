@@ -84,6 +84,19 @@ class ShortenedList extends StatelessWidget {
               return Flexible(
                 child: Column(
                   children: [
+                    if (state is HomeErrorState)
+                      Container(
+                        width: double.maxFinite,
+                        padding: const EdgeInsets.all(12.0),
+                        decoration: BoxDecoration(
+                            color: Colors.red[300],
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5))),
+                        child: Text(
+                          state.message,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     Visibility(
                       child: const Padding(
                         padding: EdgeInsets.symmetric(vertical: 8.0),

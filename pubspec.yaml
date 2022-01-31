@@ -22,6 +22,7 @@ dependencies:
 dev_dependencies:
   mockito: ^5.0.17 # Tests helpers
   build_runner: ^2.1.7 # Files generator
+  bloc_test: ^9.0.2 # Tests bloc
 
   flutter_test:
     sdk: flutter

@@ -33,11 +33,11 @@ class DioImpl implements HttpManager {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response.data;
       } else if (response.statusCode == 404) {
-        return UrlNotFoundException(response.data);
+        throw UrlNotFoundException(response.data);
       }
-      return GenericException(response.data);
+      throw GenericException(response.data);
     } on DioError catch (e) {
-      throw GenericException(e.message);
+      throw GenericException("DioError: ${e.error}");
     }
   }
 }

@@ -16,10 +16,11 @@ class ShortenerRepositoryImpl implements ShortenerRepository {
   });
 
   @override
-  Future<Either<BaseException, ShortUrl>> shortUrl(String urlToBeShortened) async {
-    final response = await remote.shortUrl(urlToBeShortened);
-
+  Future<Either<BaseException, ShortUrl>> shortUrl(
+      String urlToBeShortened) async {
     try {
+      final response = await remote.shortUrl(urlToBeShortened);
+
       return Right(response);
     } on GenericException {
       return Left(UrlGenericErrorModel());
@@ -28,12 +29,12 @@ class ShortenerRepositoryImpl implements ShortenerRepository {
 
   @override
   Future<Either<BaseException, OriginalUrl>> getOriginalUrl(String id) async {
-    final response = await remote.getOriginalUrl(id);
-
     try {
+      final response = await remote.getOriginalUrl(id);
+
       return Right(response);
-    } on OriginalUrlNotFoundErrorModel {
-      return Right(response);
+    } on OriginalUrlNotFoundErrorModel catch (e) {
+      return Right(e);
     } on GenericException {
       return Left(UrlGenericErrorModel());
     }

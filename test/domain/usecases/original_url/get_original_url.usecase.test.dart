@@ -47,13 +47,13 @@ void main() {
          OriginalUrlNotFoundErrorModel from GetOriginalUrlUseCase''', () async {
       // arrange
       when(mockShortenerRepository.getOriginalUrl(testId))
-          .thenAnswer((_) async => const Right(testOriginalUrl));
+          .thenAnswer((_) async => const Right(testOriginalUrlNotFound));
       // act
       final result = await useCase(testId);
       // assert
       verify(mockShortenerRepository.getOriginalUrl(testId));
 
-      expect(result, equals(const Right(testOriginalUrl)));
+      expect(result, equals(const Right(testOriginalUrlNotFound)));
       verifyNoMoreInteractions(mockShortenerRepository);
     });
   });
