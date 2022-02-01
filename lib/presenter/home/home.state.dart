@@ -13,14 +13,24 @@ class HomeUrlShortenedState extends HomeState {
   HomeUrlShortenedState({required this.shortUrl});
 }
 
-class HomeShortenedUrlRetrievedState extends HomeState {
-  final OriginalUrl originalUrl;
+class HomeUrlCopiedToClipBoardState extends HomeState {
+  final String copiedUrl;
 
-  HomeShortenedUrlRetrievedState({required this.originalUrl});
+  HomeUrlCopiedToClipBoardState({required this.copiedUrl});
+}
+
+class HomeShortenedUrlNotFoundState extends HomeState {
+  final String message;
+
+  HomeShortenedUrlNotFoundState({required this.message});
 }
 
 class HomeErrorState extends HomeState {
   final String message;
 
   HomeErrorState({required this.message});
+}
+
+class HomeShowUrlOptionsState extends HomeState {
+  HomeShowUrlOptionsState();
 }

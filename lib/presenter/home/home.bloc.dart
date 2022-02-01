@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
+import 'package:nubanktest/data/models/original_url/original_url_error.model.dart';
 import 'package:nubanktest/domain/entities/original_url.entity.dart';
 import 'package:nubanktest/domain/entities/short_url.entity.dart';
 import 'package:nubanktest/domain/usecases/get_original_url.usecase.dart';
@@ -24,11 +26,23 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Function(ShortUrl) get _onShortenedChanged =>
       _shortenedUrlController.sink.add;
 
+  final _originalUrlController = BehaviorSubject<OriginalUrl>();
+
+  Stream<OriginalUrl> get originalUrl => _originalUrlController.stream;
+
+  Function(OriginalUrl) get _onOriginalUrlChanged =>
+      _originalUrlController.sink.add;
+
+  final _showAliasUrlController = BehaviorSubject<String>.seeded("");
+  String get showAliasUrl => _showAliasUrlController.stream.value;
+  Function(String) get showAliasUrlChanged =>
+      _showAliasUrlController.sink.add;
+
   HomeBloc({
     required this.getOriginalUrlUseCase,
     required this.shortUrlUseCase,
   }) : super(HomeInitialState()) {
-    on<ShortUrlEvent>((event, emit) async {
+    on<HomeShortUrlEvent>((event, emit) async {
       emit(HomeLoadingState());
 
       final shortUrlEither = await shortUrlUseCase(event.urlToBeShortened);
@@ -43,7 +57,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         },
       );
     });
-    on<GetShortenedUrlEvent>((event, emit) async {
+    on<HomeGetShortenedUrlEvent>((event, emit) async {
       emit(HomeLoadingState());
 
       final originalUrlEither = await getOriginalUrlUseCase(event.id);
@@ -52,10 +66,32 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         (failure) {
           emit(HomeErrorState(message: failure.message));
         },
-        (originalUrl) {
-          emit(HomeShortenedUrlRetrievedState(originalUrl: originalUrl));
+        (retrievedOriginalUrl) {
+          if (retrievedOriginalUrl.runtimeType ==
+              OriginalUrlNotFoundErrorModel) {
+            retrievedOriginalUrl =
+                retrievedOriginalUrl as OriginalUrlNotFoundErrorModel;
+
+            emit(HomeShortenedUrlNotFoundState(
+                message: retrievedOriginalUrl.error));
+          } else {
+            emit(HomeUrlCopiedToClipBoardState(
+                copiedUrl: retrievedOriginalUrl.url));
+            _onOriginalUrlChanged(retrievedOriginalUrl);
+            Clipboard.setData(ClipboardData(text: retrievedOriginalUrl.url));
+          }
         },
       );
+    });
+    on<HomeShowUrlOptionsEvent>((event, emit) async {
+      emit(HomeShowUrlOptionsState());
+    });
+    on<HomeCopyOriginalUrlEvent>((event, emit) async {
+      add(HomeGetShortenedUrlEvent(id: event.id));
+    });
+    on<HomeCopyShortenedUrlEvent>((event, emit) async {
+      Clipboard.setData(ClipboardData(text: event.shortenedUrl));
+      emit(HomeUrlCopiedToClipBoardState(copiedUrl: event.shortenedUrl));
     });
   }
 }

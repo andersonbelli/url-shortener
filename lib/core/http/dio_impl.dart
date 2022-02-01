@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:nubanktest/config/server_config.dart';
 import 'package:nubanktest/core/http/http_manager.dart';
 import 'package:nubanktest/core/http/models/http_exceptions.dart';
+import 'package:nubanktest/data/models/original_url/original_url_error.model.dart';
 
 class DioImpl implements HttpManager {
   final Dio _dio = Dio();
@@ -14,13 +13,15 @@ class DioImpl implements HttpManager {
       final response = await _dio.get("${ServerConfig.BASE_URL}/$endpoint");
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.data);
-      } else if (response.statusCode == 404) {
-        return UrlNotFoundException(response.data);
+        return response.data;
       }
-      return GenericException(response.data);
+      throw GenericException(response.data);
     } on DioError catch (e) {
-      throw GenericException(e.message);
+      if (e.response?.statusCode == 404) {
+        return OriginalUrlNotFoundErrorModel.fromJson(e.response?.data);
+      }
+
+      throw GenericException("DioError: ${e.error}");
     }
   }
 
@@ -32,9 +33,8 @@ class DioImpl implements HttpManager {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response.data;
-      } else if (response.statusCode == 404) {
-        throw UrlNotFoundException(response.data);
       }
+
       throw GenericException(response.data);
     } on DioError catch (e) {
       throw GenericException("DioError: ${e.error}");

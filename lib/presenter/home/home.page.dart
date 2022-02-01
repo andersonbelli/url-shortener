@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nubanktest/config/server_config.dart';
 import 'package:nubanktest/di/di.dart';
 import 'package:nubanktest/domain/entities/short_url.entity.dart';
 import 'package:nubanktest/presenter/home/home.bloc.dart';
@@ -57,23 +58,34 @@ class ShortenedList extends StatelessWidget {
       padding: const EdgeInsets.only(top: 24.0),
       child: Column(
         children: [
-          const SizedBox(
-            width: double.maxFinite,
-            child: Text(
-              "Recently shortened URLs",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(
+                width: double.maxFinite,
+                child: Text(
+                  "Recently shortened URLs",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
+              Container(
+                width: double.maxFinite,
+                padding: const EdgeInsets.only(top: 8.0),
+                child: const Text(
+                  "${ServerConfig.BASE_URL}/short/",
+                  style: TextStyle(color: Colors.black54, fontSize: 14),
+                ),
+              ),
+            ],
           ),
-          const Padding(
-            padding: EdgeInsets.only(right: 24.0),
-            child: Divider(
-              color: Colors.black26,
-              height: 40,
-              thickness: 1,
-            ),
+          const Divider(
+            color: Colors.black26,
+            height: 40,
+            endIndent: 24,
+            thickness: 1,
           ),
           BlocConsumer<HomeBloc, HomeState>(
             builder: (BuildContext context, state) {
@@ -84,19 +96,9 @@ class ShortenedList extends StatelessWidget {
               return Flexible(
                 child: Column(
                   children: [
-                    if (state is HomeErrorState)
-                      Container(
-                        width: double.maxFinite,
-                        padding: const EdgeInsets.all(12.0),
-                        decoration: BoxDecoration(
-                            color: Colors.red[300],
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(5))),
-                        child: Text(
-                          state.message,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
+                    if (state is HomeErrorState) errorMessageBox(state.message),
+                    if (state is HomeShortenedUrlNotFoundState)
+                      errorMessageBox(state.message),
                     Visibility(
                       child: const Padding(
                         padding: EdgeInsets.symmetric(vertical: 8.0),
@@ -126,9 +128,63 @@ class ShortenedList extends StatelessWidget {
                               itemBuilder: (context, index) {
                                 final url = bloc.urlsList[index];
 
-                                return ListTile(
-                                  title: Text(url.alias),
-                                  subtitle: Text(url.links.self),
+                                return Column(
+                                  children: [
+                                    ListTile(
+                                      title: Text(url.alias),
+                                      trailing: const Icon(
+                                        Icons.keyboard_arrow_down_outlined,
+                                        color: Colors.black87,
+                                      ),
+                                      onTap: () {
+                                        bloc.showAliasUrlChanged(url.alias);
+                                        bloc.add(HomeShowUrlOptionsEvent());
+                                      },
+                                    ),
+                                    Divider(
+                                      color: Colors.deepPurpleAccent
+                                          .withOpacity(0.7),
+                                      height: 10,
+                                      indent: 10,
+                                      endIndent: 10,
+                                      thickness: 0.7,
+                                    ),
+                                    if (state is HomeShowUrlOptionsState &&
+                                        bloc.showAliasUrl == url.alias)
+                                      Container(
+                                        child: Row(
+                                          children: [
+                                            TextButton(
+                                              onPressed: () async {
+                                                bloc.add(
+                                                    HomeCopyOriginalUrlEvent(
+                                                        id: url.alias));
+                                              },
+                                              child: const Text(
+                                                  "Copy original URL"),
+                                            ),
+                                            ElevatedButton(
+                                                onPressed: () => bloc.add(
+                                                    HomeCopyShortenedUrlEvent(
+                                                        shortenedUrl:
+                                                            url.links.short)),
+                                                child: const Text(
+                                                    "Copy shortened URL")),
+                                          ],
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.only(
+                                            bottomRight: Radius.circular(20.0),
+                                            bottomLeft: Radius.circular(20.0),
+                                          ),
+                                          color: Colors.grey[200],
+                                        ),
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                      ),
+                                  ],
                                 );
                               },
                             );
@@ -141,6 +197,15 @@ class ShortenedList extends StatelessWidget {
             listener: (BuildContext context, state) {
               if (state is HomeUrlShortenedState) {
                 bloc.urlsList.add(state.shortUrl);
+              } else if (state is HomeUrlCopiedToClipBoardState) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      '"${state.copiedUrl}" \n copied to clipboard',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                );
               }
             },
           ),
@@ -182,7 +247,7 @@ class _SearchBarState extends State<SearchBar> {
           flex: 1,
           child: ElevatedButton(
             onPressed: () =>
-                bloc.add(ShortUrlEvent(urlToBeShortened: controller.text)),
+                bloc.add(HomeShortUrlEvent(urlToBeShortened: controller.text)),
             child: const Icon(Icons.send),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.all(12),
@@ -195,4 +260,18 @@ class _SearchBarState extends State<SearchBar> {
       ],
     );
   }
+}
+
+Widget errorMessageBox(String message) {
+  return Container(
+    width: double.maxFinite,
+    padding: const EdgeInsets.all(12.0),
+    decoration: BoxDecoration(
+        color: Colors.red[300],
+        borderRadius: const BorderRadius.all(Radius.circular(5))),
+    child: Text(
+      message,
+      style: const TextStyle(fontWeight: FontWeight.bold),
+    ),
+  );
 }

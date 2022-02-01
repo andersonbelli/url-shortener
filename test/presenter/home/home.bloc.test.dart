@@ -65,7 +65,7 @@ void main() {
         HomeBloc(
           getOriginalUrlUseCase: mockGetOriginalUrlUseCase,
           shortUrlUseCase: mockShortUrlUseCase,
-        ).add(ShortUrlEvent(urlToBeShortened: testUrl));
+        ).add(HomeShortUrlEvent(urlToBeShortened: testUrl));
         await untilCalled(mockShortUrlUseCase(any));
         // assert
         verify(mockShortUrlUseCase(testUrl));
@@ -83,7 +83,7 @@ void main() {
         HomeBloc(
           getOriginalUrlUseCase: mockGetOriginalUrlUseCase,
           shortUrlUseCase: mockShortUrlUseCase,
-        ).add(GetShortenedUrlEvent(id: testId));
+        ).add(HomeGetShortenedUrlEvent(id: testId));
         await untilCalled(mockGetOriginalUrlUseCase(any));
         // assert
         verify(mockGetOriginalUrlUseCase(testId));
@@ -101,7 +101,7 @@ void main() {
         HomeBloc(
           getOriginalUrlUseCase: mockGetOriginalUrlUseCase,
           shortUrlUseCase: mockShortUrlUseCase,
-        ).add(GetShortenedUrlEvent(id: testId));
+        ).add(HomeGetShortenedUrlEvent(id: testId));
         await untilCalled(mockGetOriginalUrlUseCase(any));
         // assert
         verify(mockGetOriginalUrlUseCase(testId));
@@ -118,7 +118,7 @@ void main() {
       ),
       setUp: () => when(mockShortUrlUseCase(any))
           .thenAnswer((_) async => const Right(testShortUrl)),
-      act: (bloc) => bloc.add(ShortUrlEvent(urlToBeShortened: testUrl)),
+      act: (bloc) => bloc.add(HomeShortUrlEvent(urlToBeShortened: testUrl)),
       expect: () => [
         const TypeMatcher<HomeLoadingState>(),
         const TypeMatcher<HomeUrlShortenedState>(),
@@ -133,10 +133,10 @@ void main() {
       ),
       setUp: () => when(mockGetOriginalUrlUseCase(any))
           .thenAnswer((_) async => const Right(testOriginalUrl)),
-      act: (bloc) => bloc.add(GetShortenedUrlEvent(id: testId)),
+      act: (bloc) => bloc.add(HomeGetShortenedUrlEvent(id: testId)),
       expect: () => [
         const TypeMatcher<HomeLoadingState>(),
-        const TypeMatcher<HomeShortenedUrlRetrievedState>(),
+        const TypeMatcher<HomeUrlCopiedToClipBoardState>(),
       ],
     );
   });

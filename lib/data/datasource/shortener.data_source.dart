@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+
 import 'package:nubanktest/core/http/http_manager.dart';
 import 'package:nubanktest/data/models/original_url/original_url.model.dart';
 import 'package:nubanktest/data/models/original_url/original_url_error.model.dart';
@@ -25,14 +25,12 @@ class ShortenerDataSourceImpl extends ShortenerDataSource {
 
   @override
   Future<OriginalUrlModel> getOriginalUrl(String id) async {
-    final Response response = await httpManager.get("/api/alias/$id");
+    final response = await httpManager.get("api/alias/$id");
 
-    Map<String, dynamic> responseData = response.data;
-
-    if (responseData.containsKey("error")) {
-      return OriginalUrlNotFoundErrorModel.fromJson(responseData);
+    if (response is OriginalUrlNotFoundErrorModel) {
+      return response;
     }
 
-    return OriginalUrlModel.fromJson(responseData);
+    return OriginalUrlModel.fromJson(response);
   }
 }
