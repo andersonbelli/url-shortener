@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nubanktest/config/server_config.dart';
 import 'package:nubanktest/di/di.dart';
@@ -198,6 +199,8 @@ class ShortenedList extends StatelessWidget {
               if (state is HomeUrlShortenedState) {
                 bloc.urlsList.add(state.shortUrl);
               } else if (state is HomeUrlCopiedToClipBoardState) {
+                Clipboard.setData(ClipboardData(text: state.copiedUrl));
+
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(

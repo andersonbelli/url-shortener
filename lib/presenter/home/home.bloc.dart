@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 import 'package:nubanktest/data/models/original_url/original_url_error.model.dart';
 import 'package:nubanktest/domain/entities/original_url.entity.dart';
@@ -34,9 +33,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       _originalUrlController.sink.add;
 
   final _showAliasUrlController = BehaviorSubject<String>.seeded("");
+
   String get showAliasUrl => _showAliasUrlController.stream.value;
-  Function(String) get showAliasUrlChanged =>
-      _showAliasUrlController.sink.add;
+
+  Function(String) get showAliasUrlChanged => _showAliasUrlController.sink.add;
 
   HomeBloc({
     required this.getOriginalUrlUseCase,
@@ -78,7 +78,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(HomeUrlCopiedToClipBoardState(
                 copiedUrl: retrievedOriginalUrl.url));
             _onOriginalUrlChanged(retrievedOriginalUrl);
-            Clipboard.setData(ClipboardData(text: retrievedOriginalUrl.url));
           }
         },
       );
@@ -90,7 +89,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       add(HomeGetShortenedUrlEvent(id: event.id));
     });
     on<HomeCopyShortenedUrlEvent>((event, emit) async {
-      Clipboard.setData(ClipboardData(text: event.shortenedUrl));
       emit(HomeUrlCopiedToClipBoardState(copiedUrl: event.shortenedUrl));
     });
   }

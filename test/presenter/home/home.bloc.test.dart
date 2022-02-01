@@ -7,6 +7,7 @@ import 'package:nubanktest/data/models/links/links.model.dart';
 import 'package:nubanktest/data/models/original_url/original_url.model.dart';
 import 'package:nubanktest/data/models/original_url/original_url_error.model.dart';
 import 'package:nubanktest/data/models/short_url/short_url.model.dart';
+import 'package:nubanktest/data/models/url_generic_error.model.dart';
 import 'package:nubanktest/domain/usecases/get_original_url.usecase.dart';
 import 'package:nubanktest/domain/usecases/short_url.usecase.dart';
 import 'package:nubanktest/presenter/home/home.bloc.dart';
@@ -111,7 +112,8 @@ void main() {
 
   group('HomeBloc HomeState successful tests', () {
     blocTest<HomeBloc, HomeState>(
-      'Should emit [Loading] and [Loaded] when data is gotten successfully',
+      '''HomeShortUrlEvent should emit [Loading] and [UrlShortened]
+         when URL has been shortened successfully''',
       build: () => HomeBloc(
         getOriginalUrlUseCase: mockGetOriginalUrlUseCase,
         shortUrlUseCase: mockShortUrlUseCase,
@@ -126,7 +128,8 @@ void main() {
     );
 
     blocTest<HomeBloc, HomeState>(
-      'Should emit [Loading] and [Loaded] when data is gotten successfully',
+      '''HomeGetShortenedUrlEvent should emit [Loading] and [UrlCopiedToClipBoardS]
+           when URL has been copied successfully''',
       build: () => HomeBloc(
         getOriginalUrlUseCase: mockGetOriginalUrlUseCase,
         shortUrlUseCase: mockShortUrlUseCase,
@@ -137,6 +140,64 @@ void main() {
       expect: () => [
         const TypeMatcher<HomeLoadingState>(),
         const TypeMatcher<HomeUrlCopiedToClipBoardState>(),
+      ],
+    );
+
+    blocTest<HomeBloc, HomeState>(
+      '''HomeShowUrlOptionsEvent should emit [ShowUrlOptions] successfully''',
+      build: () => HomeBloc(
+        getOriginalUrlUseCase: mockGetOriginalUrlUseCase,
+        shortUrlUseCase: mockShortUrlUseCase,
+      ),
+      act: (bloc) => bloc.add(HomeShowUrlOptionsEvent()),
+      expect: () => [
+        const TypeMatcher<HomeShowUrlOptionsState>(),
+      ],
+    );
+
+    blocTest<HomeBloc, HomeState>(
+      '''HomeCopyShortenedUrlEvent should emit [UrlCopiedToClipBoard] successfully''',
+      build: () => HomeBloc(
+        getOriginalUrlUseCase: mockGetOriginalUrlUseCase,
+        shortUrlUseCase: mockShortUrlUseCase,
+      ),
+      act: (bloc) => bloc.add(HomeCopyShortenedUrlEvent(shortenedUrl: testUrl)),
+      expect: () => [
+        const TypeMatcher<HomeUrlCopiedToClipBoardState>(),
+      ],
+    );
+  });
+
+  group('HomeBloc HomeState fail tests', () {
+    blocTest<HomeBloc, HomeState>(
+      '''HomeGetShortenedUrlEvent should emit [Loading] and [Error]
+           when a error occur''',
+      build: () => HomeBloc(
+        getOriginalUrlUseCase: mockGetOriginalUrlUseCase,
+        shortUrlUseCase: mockShortUrlUseCase,
+      ),
+      setUp: () => when(mockGetOriginalUrlUseCase(any))
+          .thenAnswer((_) async => Left(UrlGenericErrorModel())),
+      act: (bloc) => bloc.add(HomeGetShortenedUrlEvent(id: testId)),
+      expect: () => [
+        const TypeMatcher<HomeLoadingState>(),
+        const TypeMatcher<HomeErrorState>(),
+      ],
+    );
+
+    blocTest<HomeBloc, HomeState>(
+      '''HomeGetShortenedUrlEvent should emit [Loading] and [ShortenedUrlNotFound]
+           when URL is not found''',
+      build: () => HomeBloc(
+        getOriginalUrlUseCase: mockGetOriginalUrlUseCase,
+        shortUrlUseCase: mockShortUrlUseCase,
+      ),
+      setUp: () => when(mockGetOriginalUrlUseCase(any))
+          .thenAnswer((_) async => const Right(testOriginalUrlNotFound)),
+      act: (bloc) => bloc.add(HomeGetShortenedUrlEvent(id: testId)),
+      expect: () => [
+        const TypeMatcher<HomeLoadingState>(),
+        const TypeMatcher<HomeShortenedUrlNotFoundState>(),
       ],
     );
   });
