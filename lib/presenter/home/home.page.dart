@@ -250,8 +250,9 @@ class _SearchBarState extends State<SearchBar> {
         Flexible(
           flex: 1,
           child: ElevatedButton(
-            onPressed: () =>
-                bloc.add(HomeShortUrlEvent(urlToBeShortened: controller.text)),
+            onPressed: () => controller.text.isNotEmpty
+                ? bloc.add(HomeShortUrlEvent(urlToBeShortened: controller.text))
+                : null,
             child: const Icon(Icons.send),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.all(12),
