@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -36,10 +35,7 @@ void main() {
       () async {
         // arrange
         when(dioMock.post(any, {"url": testUrl})).thenAnswer(
-          (_) async => Response(
-            data: testResponseJson,
-            requestOptions: RequestOptions(path: ""),
-          ),
+          (_) async => testResponseJson,
         );
         // act
         shortenerDataSourceImpl.shortUrl(testUrl);
@@ -57,10 +53,7 @@ void main() {
       () async {
         // arrange
         when(dioMock.post(any, {"url": testUrl})).thenAnswer(
-          (_) async => Response(
-            data: testResponseJson,
-            requestOptions: RequestOptions(path: ""),
-          ),
+          (_) async => testResponseJson,
         );
         // act
         final result = await shortenerDataSourceImpl.shortUrl(testUrl);
@@ -73,11 +66,7 @@ void main() {
   group('Shortener GET datasource test', () {
     const testResponseJson = {"url": "https://www.google.com"};
 
-    const testErrorResponseJson = {"error": "Alias for 000 not found"};
-
     const testSuccessId = "28431";
-
-    const testFailId = "000";
 
     test(
       '''Should perform a GET request passing a real alias id
@@ -85,32 +74,11 @@ void main() {
       () async {
         // arrange
         when(dioMock.get(any)).thenAnswer(
-          (_) async => Response(
-            data: testResponseJson,
-            requestOptions: RequestOptions(path: ""),
-          ),
+          (_) async => testResponseJson,
         );
         // act
         final result =
             await shortenerDataSourceImpl.getOriginalUrl(testSuccessId);
-        // assert
-        expect(result, isA<OriginalUrlModel>());
-      },
-    );
-
-    test(
-      '''Should perform a GET request passing a fake alias id
-         in the parameter and receiving an error in response''',
-      () async {
-        // arrange
-        when(dioMock.get(any)).thenAnswer(
-          (_) async => Response(
-            data: testErrorResponseJson,
-            requestOptions: RequestOptions(path: ""),
-          ),
-        );
-        // act
-        final result = await shortenerDataSourceImpl.getOriginalUrl(testFailId);
         // assert
         expect(result, isA<OriginalUrlModel>());
       },

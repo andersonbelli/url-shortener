@@ -19,6 +19,7 @@ import 'home.bloc.test.mocks.dart';
 void main() {
   late MockGetOriginalUrlUseCase mockGetOriginalUrlUseCase;
   late MockShortUrlUseCase mockShortUrlUseCase;
+  late HomeBloc bloc;
 
   const testOriginalUrl = OriginalUrlModel(
     url: "https://www.google.com",
@@ -43,15 +44,17 @@ void main() {
   setUpAll(() {
     mockGetOriginalUrlUseCase = MockGetOriginalUrlUseCase();
     mockShortUrlUseCase = MockShortUrlUseCase();
+
+    bloc = HomeBloc(
+      shortUrlUseCase: mockShortUrlUseCase,
+      getOriginalUrlUseCase: mockGetOriginalUrlUseCase,
+    );
   });
 
   test('initialState should be HomeInitialState', () {
     // assert
     expect(
-        HomeBloc(
-          getOriginalUrlUseCase: mockGetOriginalUrlUseCase,
-          shortUrlUseCase: mockShortUrlUseCase,
-        ).state,
+        bloc.state,
         isInstanceOf<HomeInitialState>());
   });
 
@@ -63,10 +66,7 @@ void main() {
         when(mockShortUrlUseCase(any))
             .thenAnswer((_) async => const Right(testShortUrl));
         // act
-        HomeBloc(
-          getOriginalUrlUseCase: mockGetOriginalUrlUseCase,
-          shortUrlUseCase: mockShortUrlUseCase,
-        ).add(HomeShortUrlEvent(urlToBeShortened: testUrl));
+        bloc.add(HomeShortUrlEvent(urlToBeShortened: testUrl));
         await untilCalled(mockShortUrlUseCase(any));
         // assert
         verify(mockShortUrlUseCase(testUrl));
@@ -81,10 +81,7 @@ void main() {
         when(mockGetOriginalUrlUseCase(any))
             .thenAnswer((_) async => const Right(testOriginalUrl));
         // act
-        HomeBloc(
-          getOriginalUrlUseCase: mockGetOriginalUrlUseCase,
-          shortUrlUseCase: mockShortUrlUseCase,
-        ).add(HomeGetShortenedUrlEvent(id: testId));
+        bloc.add(HomeGetShortenedUrlEvent(id: testId));
         await untilCalled(mockGetOriginalUrlUseCase(any));
         // assert
         verify(mockGetOriginalUrlUseCase(testId));
@@ -99,10 +96,7 @@ void main() {
         when(mockGetOriginalUrlUseCase(any))
             .thenAnswer((_) async => const Right(testOriginalUrlNotFound));
         // act
-        HomeBloc(
-          getOriginalUrlUseCase: mockGetOriginalUrlUseCase,
-          shortUrlUseCase: mockShortUrlUseCase,
-        ).add(HomeGetShortenedUrlEvent(id: testId));
+        bloc.add(HomeGetShortenedUrlEvent(id: testId));
         await untilCalled(mockGetOriginalUrlUseCase(any));
         // assert
         verify(mockGetOriginalUrlUseCase(testId));

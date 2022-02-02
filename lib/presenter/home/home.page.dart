@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Nubank Shortener"),
+        title: const Text("URL Shortener"),
         centerTitle: true,
         elevation: 0,
       ),
@@ -226,8 +226,7 @@ class SearchBar extends StatefulWidget {
 }
 
 class _SearchBarState extends State<SearchBar> {
-  final TextEditingController controller =
-      TextEditingController(text: "www.google.com");
+  final TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -236,14 +235,16 @@ class _SearchBarState extends State<SearchBar> {
       children: [
         Expanded(
           flex: 5,
-          child: TextField(
-            controller: controller,
-            decoration: const InputDecoration(
-              fillColor: Colors.black12,
-              filled: true,
-              border: InputBorder.none,
+          child: Material(
+            child: TextField(
+              controller: controller,
+              decoration: const InputDecoration(
+                fillColor: Colors.black12,
+                filled: true,
+                border: InputBorder.none,
+              ),
+              keyboardType: TextInputType.url,
             ),
-            keyboardType: TextInputType.url,
           ),
         ),
         Flexible(
