@@ -31,7 +31,8 @@ void main() {
     ),
   );
 
-  setUpAll(() {mockShortUrlUseCase = MockShortUrlUseCase();
+  setUpAll(() {
+    mockShortUrlUseCase = MockShortUrlUseCase();
     mockGetOriginalUrlUseCase = MockGetOriginalUrlUseCase();
 
     Injector().di.registerFactory(() => HomeBloc(

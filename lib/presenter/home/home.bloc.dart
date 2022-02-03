@@ -22,7 +22,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Stream<ShortUrl> get shortenedUrl => _shortenedUrlController.stream;
 
-  Function(ShortUrl) get _onShortenedChanged =>
+  Function(ShortUrl) get onShortenedChanged =>
       _shortenedUrlController.sink.add;
 
   final _originalUrlController = BehaviorSubject<OriginalUrl>();
@@ -53,7 +53,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         },
         (shortenedUrl) {
           emit(HomeUrlShortenedState(shortUrl: shortenedUrl));
-          _onShortenedChanged(shortenedUrl);
+          onShortenedChanged(shortenedUrl);
         },
       );
     });

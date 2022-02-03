@@ -13,3 +13,7 @@ The only command that need to be executed is the generator
 of mocks files:
 
  ``` flutter pub run build_runner build --delete-conflicting-outputs ```
+
+And to run the integration tests use the following command:
+
+ ``` flutter test integration_test ```

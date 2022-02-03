@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:nubanktest/di/core.di.dart';
+import 'package:nubanktest/di/di.dart';
+import 'package:nubanktest/presenter/home/home.bloc.dart';
 import 'package:nubanktest/presenter/home/home.page.dart';
 
 void main() {
+  CoreDI().registerAll();
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -14,6 +18,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  HomeBloc bloc = Injector().di.get<HomeBloc>();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,13 +27,10 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
-      home: const HomePage(),
+      home: InheritedDataProvider(
+        bloc,
+        const HomePage(),
+      ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    CoreDI().registerAll();
   }
 }

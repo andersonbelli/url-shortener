@@ -6,7 +6,23 @@ import 'package:nubanktest/di/di.dart';
 import 'package:nubanktest/domain/entities/short_url.entity.dart';
 import 'package:nubanktest/presenter/home/home.bloc.dart';
 
-HomeBloc bloc = Injector().di.get<HomeBloc>();
+class InheritedDataProvider extends InheritedWidget {
+  final HomeBloc bloc;
+  final Widget child;
+
+  const InheritedDataProvider(this.bloc, this.child, {Key? key})
+      : super(key: key, child: child);
+
+  @override
+  bool updateShouldNotify(InheritedDataProvider oldWidget) =>
+      child != oldWidget.child;
+
+  static HomeBloc? of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<InheritedDataProvider>()
+        ?.bloc;
+  }
+}
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -37,8 +53,10 @@ class ShortenedBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = InheritedDataProvider.of(context);
+
     return BlocProvider(
-      create: (context) => bloc,
+      create: (context) => bloc ?? Injector().di.get<HomeBloc>(),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: const [
@@ -55,6 +73,9 @@ class ShortenedList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc =
+        InheritedDataProvider.of(context) ?? Injector().di.get<HomeBloc>();
+
     return Padding(
       padding: const EdgeInsets.only(top: 24.0),
       child: Column(
@@ -108,88 +129,10 @@ class ShortenedList extends StatelessWidget {
                       visible: state is HomeLoadingState,
                     ),
                     Flexible(
-                      child: StreamBuilder<ShortUrl>(
-                          stream: bloc.shortenedUrl,
-                          builder: (context, snapshot) {
-                            final urls = snapshot.data;
-
-                            if (urls == null) {
-                              return const SizedBox();
-                            }
-
-                            return ListView.separated(
-                              shrinkWrap: true,
-                              itemCount: bloc.urlsList.length,
-                              reverse: true,
-                              separatorBuilder: (_, __) =>
-                                  const SizedBox(height: 8.0),
-                              padding: EdgeInsets.only(
-                                bottom: MediaQuery.of(context).padding.bottom,
-                              ),
-                              itemBuilder: (context, index) {
-                                final url = bloc.urlsList[index];
-
-                                return Column(
-                                  children: [
-                                    ListTile(
-                                      title: Text(url.alias),
-                                      trailing: const Icon(
-                                        Icons.keyboard_arrow_down_outlined,
-                                        color: Colors.black87,
-                                      ),
-                                      onTap: () {
-                                        bloc.showAliasUrlChanged(url.alias);
-                                        bloc.add(HomeShowUrlOptionsEvent());
-                                      },
-                                    ),
-                                    Divider(
-                                      color: Colors.deepPurpleAccent
-                                          .withOpacity(0.7),
-                                      height: 10,
-                                      indent: 10,
-                                      endIndent: 10,
-                                      thickness: 0.7,
-                                    ),
-                                    if (state is HomeShowUrlOptionsState &&
-                                        bloc.showAliasUrl == url.alias)
-                                      Container(
-                                        child: Row(
-                                          children: [
-                                            TextButton(
-                                              onPressed: () async {
-                                                bloc.add(
-                                                    HomeCopyOriginalUrlEvent(
-                                                        id: url.alias));
-                                              },
-                                              child: const Text(
-                                                  "Copy original URL"),
-                                            ),
-                                            ElevatedButton(
-                                                onPressed: () => bloc.add(
-                                                    HomeCopyShortenedUrlEvent(
-                                                        shortenedUrl:
-                                                            url.links.short)),
-                                                child: const Text(
-                                                    "Copy shortened URL")),
-                                          ],
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.only(
-                                            bottomRight: Radius.circular(20.0),
-                                            bottomLeft: Radius.circular(20.0),
-                                          ),
-                                          color: Colors.grey[200],
-                                        ),
-                                        margin: const EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                      ),
-                                  ],
-                                );
-                              },
-                            );
-                          }),
+                      child: URLsList(
+                        bloc: bloc,
+                        state: state,
+                      ),
                     ),
                   ],
                 ),
@@ -218,6 +161,106 @@ class ShortenedList extends StatelessWidget {
   }
 }
 
+class URLsList extends StatefulWidget {
+  final HomeState state;
+  final HomeBloc bloc;
+
+  const URLsList({
+    Key? key,
+    required this.state,
+    required this.bloc,
+  }) : super(key: key);
+
+  @override
+  _URLsListState createState() => _URLsListState();
+}
+
+class _URLsListState extends State<URLsList> {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<ShortUrl>(
+        stream: widget.bloc.shortenedUrl,
+        builder: (context, snapshot) {
+          final urls = snapshot.data;
+
+          if (urls == null) {
+            return const Text("Nao era pra eu aparecer man D:");
+          }
+
+          return ListView.separated(
+            shrinkWrap: true,
+            itemCount: widget.bloc.urlsList.length,
+            reverse: true,
+            separatorBuilder: (_, __) => const SizedBox(height: 8.0),
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).padding.bottom,
+            ),
+            itemBuilder: (context, index) {
+              final url = widget.bloc.urlsList[index];
+
+              return Column(
+                children: [
+                  ListTile(
+                    title: Text(url.alias),
+                    trailing: (widget.state is HomeShowUrlOptionsState &&
+                            widget.bloc.showAliasUrl == url.alias)
+                        ? const Icon(
+                            Icons.keyboard_arrow_up_outlined,
+                            color: Colors.black87,
+                          )
+                        : const Icon(
+                            Icons.keyboard_arrow_down_outlined,
+                            color: Colors.black87,
+                          ),
+                    onTap: () {
+                      widget.bloc.showAliasUrlChanged(url.alias);
+                      widget.bloc.add(HomeShowUrlOptionsEvent());
+                    },
+                  ),
+                  Divider(
+                    color: Colors.deepPurpleAccent.withOpacity(0.7),
+                    height: 10,
+                    indent: 10,
+                    endIndent: 10,
+                    thickness: 0.7,
+                  ),
+                  if (widget.state is HomeShowUrlOptionsState &&
+                      widget.bloc.showAliasUrl == url.alias)
+                    Container(
+                      child: Row(
+                        children: [
+                          TextButton(
+                            onPressed: () async {
+                              widget.bloc
+                                  .add(HomeCopyOriginalUrlEvent(id: url.alias));
+                            },
+                            child: const Text("Copy original URL"),
+                          ),
+                          ElevatedButton(
+                              onPressed: () => widget.bloc.add(
+                                  HomeCopyShortenedUrlEvent(
+                                      shortenedUrl: url.links.short)),
+                              child: const Text("Copy shortened URL")),
+                        ],
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                          bottomRight: Radius.circular(20.0),
+                          bottomLeft: Radius.circular(20.0),
+                        ),
+                        color: Colors.grey[200],
+                      ),
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                    ),
+                ],
+              );
+            },
+          );
+        });
+  }
+}
+
 class SearchBar extends StatefulWidget {
   const SearchBar({Key? key}) : super(key: key);
 
@@ -230,6 +273,9 @@ class _SearchBarState extends State<SearchBar> {
 
   @override
   Widget build(BuildContext context) {
+    final bloc =
+        InheritedDataProvider.of(context) ?? Injector().di.get<HomeBloc>();
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
