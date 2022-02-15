@@ -18,6 +18,7 @@ dependencies:
   dio: ^4.0.4 # Http handler
   dartz: ^0.10.1 # Tools to simplify dart data
   rxdart: ^0.27.3 # Reactive functions
+  shared_preferences: ^2.0.13 # Save data to cache
 
 dev_dependencies:
   mockito: ^5.0.17 # Tests helpers

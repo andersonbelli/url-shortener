@@ -7,4 +7,6 @@ abstract class ShortenerRepository {
   Future<Either<BaseException, ShortUrl>> shortUrl(String urlToBeShortened);
 
   Future<Either<BaseException, OriginalUrl>> getOriginalUrl(String id);
+
+  Future<Either<BaseException, ShortUrl>> getLocalShortUrl(String alias);
 }

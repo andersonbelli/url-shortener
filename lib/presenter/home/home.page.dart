@@ -55,15 +55,12 @@ class ShortenedBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = InheritedDataProvider.of(context);
 
-    return BlocProvider(
-      create: (context) => bloc ?? Injector().di.get<HomeBloc>(),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: const [
-          SearchBar(),
-          Expanded(child: ShortenedList()),
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: const [
+        SearchBar(),
+        Expanded(child: ShortenedList()),
+      ],
     );
   }
 }

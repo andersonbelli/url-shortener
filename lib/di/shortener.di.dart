@@ -1,3 +1,4 @@
+import 'package:teststudy/core/storage/shared_preference_impl.dart';
 import 'package:teststudy/data/datasource/shortener.data_source.dart';
 import 'package:teststudy/data/repositories/shortener.repository_impl.dart';
 import 'package:teststudy/di/base.di.dart';
@@ -12,8 +13,10 @@ class ShortenerDI extends BaseDI {
   @override
   Future<void> registerAll() async {
     /// Datasource
-    _di.registerFactory<ShortenerDataSource>(
-        () => ShortenerDataSourceImpl(httpManager: _di()));
+    _di.registerFactory<ShortenerDataSource>(() => ShortenerDataSourceImpl(
+          httpManager: _di(),
+          storage: SharedPreferenceImpl(),
+        ));
 
     /// Repository
     _di.registerFactory<ShortenerRepository>(
