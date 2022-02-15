@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:nubanktest/core/http/models/http_exceptions.dart';
-import 'package:nubanktest/data/datasource/shortener.data_source.dart';
-import 'package:nubanktest/data/models/url_generic_error.model.dart';
-import 'package:nubanktest/domain/entities/original_url.entity.dart';
-import 'package:nubanktest/domain/entities/short_url.entity.dart';
-import 'package:nubanktest/domain/repositories/shortener.repository.dart';
+import 'package:teststudy/core/http/models/http_exceptions.dart';
+import 'package:teststudy/data/datasource/shortener.data_source.dart';
+import 'package:teststudy/data/models/url_generic_error.model.dart';
+import 'package:teststudy/domain/entities/original_url.entity.dart';
+import 'package:teststudy/domain/entities/short_url.entity.dart';
+import 'package:teststudy/domain/repositories/shortener.repository.dart';
 
 class ShortenerRepositoryImpl implements ShortenerRepository {
   final ShortenerDataSource remote;

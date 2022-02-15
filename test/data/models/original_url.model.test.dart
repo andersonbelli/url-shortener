@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nubanktest/data/models/original_url/original_url.model.dart';
-import 'package:nubanktest/data/models/original_url/original_url_error.model.dart';
-import 'package:nubanktest/domain/entities/original_url.entity.dart';
+import 'package:teststudy/data/models/original_url/original_url.model.dart';
+import 'package:teststudy/data/models/original_url/original_url_error.model.dart';
+import 'package:teststudy/domain/entities/original_url.entity.dart';
 
 void main() {
   const testResponseJson = {"url": "https://www.google.com"};

@@ -1,6 +1,6 @@
-import 'package:nubanktest/di/base.di.dart';
-import 'package:nubanktest/di/di.dart';
-import 'package:nubanktest/presenter/home/home.bloc.dart';
+import 'package:teststudy/di/base.di.dart';
+import 'package:teststudy/di/di.dart';
+import 'package:teststudy/presenter/home/home.bloc.dart';
 
 class HomeDI extends BaseDI {
   final _di = Injector().di;

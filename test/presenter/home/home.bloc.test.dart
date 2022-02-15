@@ -3,14 +3,14 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:nubanktest/data/models/links/links.model.dart';
-import 'package:nubanktest/data/models/original_url/original_url.model.dart';
-import 'package:nubanktest/data/models/original_url/original_url_error.model.dart';
-import 'package:nubanktest/data/models/short_url/short_url.model.dart';
-import 'package:nubanktest/data/models/url_generic_error.model.dart';
-import 'package:nubanktest/domain/usecases/get_original_url.usecase.dart';
-import 'package:nubanktest/domain/usecases/short_url.usecase.dart';
-import 'package:nubanktest/presenter/home/home.bloc.dart';
+import 'package:teststudy/data/models/links/links.model.dart';
+import 'package:teststudy/data/models/original_url/original_url.model.dart';
+import 'package:teststudy/data/models/original_url/original_url_error.model.dart';
+import 'package:teststudy/data/models/short_url/short_url.model.dart';
+import 'package:teststudy/data/models/url_generic_error.model.dart';
+import 'package:teststudy/domain/usecases/get_original_url.usecase.dart';
+import 'package:teststudy/domain/usecases/short_url.usecase.dart';
+import 'package:teststudy/presenter/home/home.bloc.dart';
 
 import 'home.bloc.test.mocks.dart';
 

@@ -1,4 +1,4 @@
-import 'package:nubanktest/domain/entities/links.entity.dart';
+import 'package:teststudy/domain/entities/links.entity.dart';
 
 class LinksModel extends Links {
   const LinksModel({

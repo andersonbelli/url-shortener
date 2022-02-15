@@ -1,6 +1,6 @@
 {
-    "name": "nubanktest",
-    "short_name": "nubanktest",
+    "name": "teststudy",
+    "short_name": "teststudy",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

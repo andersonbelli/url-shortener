@@ -1,4 +1,4 @@
-import 'package:nubanktest/core/http/models/base_exception.model.dart';
+import 'package:teststudy/core/http/models/base_exception.model.dart';
 
 class GenericException extends BaseException {
   GenericException(String message) : super(message);

@@ -1,8 +1,8 @@
 
-import 'package:nubanktest/core/http/http_manager.dart';
-import 'package:nubanktest/data/models/original_url/original_url.model.dart';
-import 'package:nubanktest/data/models/original_url/original_url_error.model.dart';
-import 'package:nubanktest/data/models/short_url/short_url.model.dart';
+import 'package:teststudy/core/http/http_manager.dart';
+import 'package:teststudy/data/models/original_url/original_url.model.dart';
+import 'package:teststudy/data/models/original_url/original_url_error.model.dart';
+import 'package:teststudy/data/models/short_url/short_url.model.dart';
 
 abstract class ShortenerDataSource {
   Future<ShortUrlModel> shortUrl(String urlToBeShortened);

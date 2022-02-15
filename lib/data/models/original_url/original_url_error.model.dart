@@ -1,4 +1,4 @@
-import 'package:nubanktest/data/models/original_url/original_url.model.dart';
+import 'package:teststudy/data/models/original_url/original_url.model.dart';
 
 class OriginalUrlNotFoundErrorModel extends OriginalUrlModel {
   final String error;

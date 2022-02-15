@@ -1,5 +1,5 @@
 
-import 'package:nubanktest/domain/entities/original_url.entity.dart';
+import 'package:teststudy/domain/entities/original_url.entity.dart';
 
 class OriginalUrlModel extends OriginalUrl {
   const OriginalUrlModel({

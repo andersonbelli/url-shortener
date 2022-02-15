@@ -4,13 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:nubanktest/data/models/links/links.model.dart';
-import 'package:nubanktest/data/models/short_url/short_url.model.dart';
-import 'package:nubanktest/di/di.dart';
-import 'package:nubanktest/domain/usecases/get_original_url.usecase.dart';
-import 'package:nubanktest/domain/usecases/short_url.usecase.dart';
-import 'package:nubanktest/presenter/home/home.bloc.dart';
-import 'package:nubanktest/presenter/home/home.page.dart';
+import 'package:teststudy/data/models/links/links.model.dart';
+import 'package:teststudy/data/models/short_url/short_url.model.dart';
+import 'package:teststudy/di/di.dart';
+import 'package:teststudy/domain/usecases/get_original_url.usecase.dart';
+import 'package:teststudy/domain/usecases/short_url.usecase.dart';
+import 'package:teststudy/presenter/home/home.bloc.dart';
+import 'package:teststudy/presenter/home/home.page.dart';
 
 import 'home.page.widget_test.mocks.dart';
 

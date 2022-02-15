@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:nubanktest/di/core.di.dart';
-import 'package:nubanktest/di/di.dart';
-import 'package:nubanktest/presenter/home/home.bloc.dart';
-import 'package:nubanktest/presenter/home/home.page.dart';
+import 'package:teststudy/di/core.di.dart';
+import 'package:teststudy/di/di.dart';
+import 'package:teststudy/presenter/home/home.bloc.dart';
+import 'package:teststudy/presenter/home/home.page.dart';
 
 void main() {
   CoreDI().registerAll();
-  WidgetsFlutterBinding.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

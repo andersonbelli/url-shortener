@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nubanktest/data/models/links/links.model.dart';
-import 'package:nubanktest/data/models/short_url/short_url.model.dart';
-import 'package:nubanktest/domain/entities/short_url.entity.dart';
+import 'package:teststudy/data/models/links/links.model.dart';
+import 'package:teststudy/data/models/short_url/short_url.model.dart';
+import 'package:teststudy/domain/entities/short_url.entity.dart';
 
 void main() {
   const testLinksJson = {

@@ -2,14 +2,14 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:nubanktest/data/datasource/shortener.data_source.dart';
-import 'package:nubanktest/data/models/links/links.model.dart';
-import 'package:nubanktest/data/models/original_url/original_url.model.dart';
-import 'package:nubanktest/data/models/original_url/original_url_error.model.dart';
-import 'package:nubanktest/data/models/short_url/short_url.model.dart';
-import 'package:nubanktest/data/models/url_generic_error.model.dart';
-import 'package:nubanktest/data/repositories/shortener.repository_impl.dart';
-import 'package:nubanktest/domain/repositories/shortener.repository.dart';
+import 'package:teststudy/data/datasource/shortener.data_source.dart';
+import 'package:teststudy/data/models/links/links.model.dart';
+import 'package:teststudy/data/models/original_url/original_url.model.dart';
+import 'package:teststudy/data/models/original_url/original_url_error.model.dart';
+import 'package:teststudy/data/models/short_url/short_url.model.dart';
+import 'package:teststudy/data/models/url_generic_error.model.dart';
+import 'package:teststudy/data/repositories/shortener.repository_impl.dart';
+import 'package:teststudy/domain/repositories/shortener.repository.dart';
 
 import 'shortener.remote_repository.test.mocks.dart';
 

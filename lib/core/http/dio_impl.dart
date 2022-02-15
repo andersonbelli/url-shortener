@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:nubanktest/config/server_config.dart';
-import 'package:nubanktest/core/http/http_manager.dart';
-import 'package:nubanktest/core/http/models/http_exceptions.dart';
-import 'package:nubanktest/data/models/original_url/original_url_error.model.dart';
+import 'package:teststudy/config/server_config.dart';
+import 'package:teststudy/core/http/http_manager.dart';
+import 'package:teststudy/core/http/models/http_exceptions.dart';
+import 'package:teststudy/data/models/original_url/original_url_error.model.dart';
 
 class DioImpl implements HttpManager {
   final Dio _dio = Dio();

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nubanktest/config/server_config.dart';
-import 'package:nubanktest/di/di.dart';
-import 'package:nubanktest/domain/entities/short_url.entity.dart';
-import 'package:nubanktest/presenter/home/home.bloc.dart';
+import 'package:teststudy/config/server_config.dart';
+import 'package:teststudy/di/di.dart';
+import 'package:teststudy/domain/entities/short_url.entity.dart';
+import 'package:teststudy/presenter/home/home.bloc.dart';
 
 class InheritedDataProvider extends InheritedWidget {
   final HomeBloc bloc;
@@ -184,8 +184,10 @@ class _URLsListState extends State<URLsList> {
           final urls = snapshot.data;
 
           if (urls == null) {
-            return const Text("Nao era pra eu aparecer man D:");
+            return const Text("Nothing to see here");
           }
+
+          print("urls: ${urls.alias}");
 
           return ListView.separated(
             shrinkWrap: true,

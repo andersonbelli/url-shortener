@@ -1,5 +1,5 @@
-import 'package:nubanktest/data/models/links/links.model.dart';
-import 'package:nubanktest/domain/entities/short_url.entity.dart';
+import 'package:teststudy/data/models/links/links.model.dart';
+import 'package:teststudy/domain/entities/short_url.entity.dart';
 
 class ShortUrlModel extends ShortUrl {
   const ShortUrlModel({
